@@ -20,25 +20,25 @@
                 </div>
                 <div class="card-body pt-0">
                     <div class="list-group list-group-flush">
-                        <a href="/user" class="list-group-item list-group-item-action {if $Request.action() == 'index'}active{/if} border-0">
+                        <a href="/user" class="list-group-item list-group-item-action {if $Request.action == 'index'}active{/if} border-0">
                             <i class="bi bi-person me-2"></i> 个人中心
                         </a>
-                        <a href="/user/my-prompts" class="list-group-item list-group-item-action {if $Request.action() == 'myPrompts'}active{/if} border-0">
+                        <a href="/user/my-prompts" class="list-group-item list-group-item-action {if $Request.action == 'myPrompts'}active{/if} border-0">
                             <i class="bi bi-file-text me-2"></i> 我的提示词
                         </a>
-                        <a href="/user/my-workflows" class="list-group-item list-group-item-action {if $Request.action() == 'myWorkflows'}active{/if} border-0">
+                        <a href="/user/my-workflows" class="list-group-item list-group-item-action {if $Request.action == 'myWorkflows'}active{/if} border-0">
                             <i class="bi bi-diagram-3 me-2"></i> 我的工作流
                         </a>
-                        <a href="/user/my-favorites" class="list-group-item list-group-item-action {if $Request.action() == 'myFavorites'}active{/if} border-0">
+                        <a href="/user/my-favorites" class="list-group-item list-group-item-action {if $Request.action == 'myFavorites'}active{/if} border-0">
                             <i class="bi bi-heart me-2"></i> 我的收藏
                         </a>
-                        <a href="/user/my-comments" class="list-group-item list-group-item-action {if $Request.action() == 'myComments'}active{/if} border-0">
+                        <a href="/user/my-comments" class="list-group-item list-group-item-action {if $Request.action == 'myComments'}active{/if} border-0">
                             <i class="bi bi-chat-dots me-2"></i> 我的评论
                         </a>
-                        <a href="/user/my-points" class="list-group-item list-group-item-action {if $Request.action() == 'myPoints'}active{/if} border-0">
+                        <a href="/user/my-points" class="list-group-item list-group-item-action {if $Request.action == 'myPoints'}active{/if} border-0">
                             <i class="bi bi-coin me-2"></i> 积分记录
                         </a>
-                        <a href="/user/setting" class="list-group-item list-group-item-action {if $Request.action() == 'setting'}active{/if} border-0">
+                        <a href="/user/setting" class="list-group-item list-group-item-action {if $Request.action == 'setting'}active{/if} border-0">
                             <i class="bi bi-gear me-2"></i> 个人设置
                         </a>
                     </div>
