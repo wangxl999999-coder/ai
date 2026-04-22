@@ -1,0 +1,9 @@
+[2026-04-22T14:55:31+08:00][sql] CONNECT:[ UseTime:0.001464s ] mysql:host=127.0.0.1;port=3306;dbname=ai_prompt;charset=utf8mb4
+[2026-04-22T14:55:31+08:00][sql] SHOW FULL COLUMNS FROM `prompts` [ RunTime:0.010538s ]
+[2026-04-22T14:55:31+08:00][sql] SELECT * FROM `prompts` WHERE  `status` = 2  AND `is_recommend` = 1 ORDER BY `create_time` DESC LIMIT 8 [ RunTime:0.001151s ]
+[2026-04-22T14:55:31+08:00][sql] SHOW FULL COLUMNS FROM `workflows` [ RunTime:0.005869s ]
+[2026-04-22T14:55:31+08:00][sql] SELECT * FROM `workflows` WHERE  `status` = 2  AND `is_recommend` = 1 ORDER BY `create_time` DESC LIMIT 8 [ RunTime:0.000993s ]
+[2026-04-22T14:55:31+08:00][sql] SELECT * FROM `prompts` WHERE  `status` = 2 ORDER BY `create_time` DESC LIMIT 12 [ RunTime:0.000583s ]
+[2026-04-22T14:55:31+08:00][sql] SHOW FULL COLUMNS FROM `categories` [ RunTime:0.006425s ]
+[2026-04-22T14:55:31+08:00][sql] SELECT * FROM `categories` WHERE  `type` = 1  AND `status` = 1 ORDER BY `sort` ASC [ RunTime:0.000577s ]
+[2026-04-22T14:55:31+08:00][sql] SELECT * FROM `categories` WHERE  `type` = 2  AND `status` = 1 ORDER BY `sort` ASC [ RunTime:0.000384s ]
