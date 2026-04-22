@@ -102,7 +102,7 @@
                         <h5 class="fw-bold mb-3">五步设计法</h5>
                         
                         <div class="position-relative">
-                            {for start=1 to=5}
+                            {foreach :range(1, 5) as $i}
                             <div class="d-flex mb-4">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
@@ -161,7 +161,7 @@
                                     {/if}
                                 </div>
                             </div>
-                            {/for}
+                            {/foreach}
                         </div>
                     </section>
                     

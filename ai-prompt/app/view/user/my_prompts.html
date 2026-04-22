@@ -88,11 +88,11 @@
                 </li>
                 {/if}
                 
-                {for start=1 to=$totalPage}
+                {foreach :range(1, $totalPage) as $i}
                 <li class="page-item {if $page == $i}active{/if}">
                     <a class="page-link" href="/user/my-prompts?page={$i}">{$i}</a>
                 </li>
-                {/for}
+                {/foreach}
                 
                 {if $page < $totalPage}
                 <li class="page-item">
