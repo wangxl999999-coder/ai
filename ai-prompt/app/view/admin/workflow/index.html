@@ -1,0 +1,183 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-diagram-3 me-2"></i>工作流管理</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="keyword" value="{$keyword|default=''}" placeholder="搜索标题">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="category_id">
+                    <option value="">全部分类</option>
+                    {foreach $categories as $category}
+                    <option value="{$category.id}" {if isset($categoryId) && $categoryId == $category.id}selected{/if}>{$category.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="status">
+                    <option value="">全部状态</option>
+                    <option value="1" {if isset($status) && $status == 1}selected{/if}>待审核</option>
+                    <option value="2" {if isset($status) && $status == 2}selected{/if}>已通过</option>
+                    <option value="3" {if isset($status) && $status == 3}selected{/if}>已拒绝</option>
+                    <option value="0" {if isset($status) && $status == 0}selected{/if}>已禁用</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> 搜索
+                </button>
+                <a href="/admin/workflow" class="btn btn-outline-secondary">
+                    重置
+                </a>
+            </div>
+        </form>
+        
+        {if !empty($list)}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th width="30%">标题</th>
+                        <th>分类</th>
+                        <th>作者</th>
+                        <th>浏览</th>
+                        <th>状态</th>
+                        <th>推荐</th>
+                        <th>发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $list as $item}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{$item.title}</div>
+                            {if $item.tags}
+                            <div class="mt-1">
+                                {foreach explode(',', $item.tags) as $tag}
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
+                                {/foreach}
+                            </div>
+                            {/if}
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                {$item.category.name|default='未分类'}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="{$item.user.avatar}" class="rounded-circle" width="24" height="24">
+                                <span class="ms-1 small">{$item.user.nickname}</span>
+                            </div>
+                        </td>
+                        <td>{$item.view_count}</td>
+                        <td>
+                            {if $item.status == 1}
+                            <span class="badge bg-warning">待审核</span>
+                            {elseif $item.status == 2}
+                            <span class="badge bg-success">已通过</span>
+                            {elseif $item.status == 3}
+                            <span class="badge bg-danger">已拒绝</span>
+                            {else}
+                            <span class="badge bg-secondary">已禁用</span>
+                            {/if}
+                        </td>
+                        <td>
+                            {if $item.is_recommend == 1}
+                            <span class="badge bg-warning"><i class="bi bi-star-fill"></i> 推荐</span>
+                            {else}
+                            <span class="text-muted">-</span>
+                            {/if}
+                        </td>
+                        <td><small class="text-muted">{$item.create_time|date='Y-m-d H:i'}</small></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/workflow/detail?id={$item.id}" class="btn btn-outline-success">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {if $item.status == 1}
+                                <button type="button" class="btn btn-outline-success btn-audit" data-id="{$item.id}" data-status="2">
+                                    通过
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-audit" data-id="{$item.id}" data-status="3">
+                                    拒绝
+                                </button>
+                                {/if}
+                                <button type="button" class="btn btn-outline-warning btn-set-recommend" data-id="{$item.id}" data-recommend="{$item.is_recommend}">
+                                    {if $item.is_recommend == 1}取消推荐{else}推荐{/if}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {else}
+        <div class="text-center py-5">
+            <i class="bi bi-diagram-3 text-muted fs-1"></i>
+            <p class="text-muted mt-3">暂无工作流数据</p>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 审核
+    $('.btn-audit').click(function() {
+        const id = $(this).data('id');
+        const status = $(this).data('status');
+        const action = status == 2 ? '通过' : '拒绝';
+        
+        if (!confirm('确定要' + action + '该工作流吗？')) {
+            return;
+        }
+        
+        $.post('/admin/workflow/audit', {
+            id: id,
+            status: status
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('审核成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 推荐/取消推荐
+    $('.btn-set-recommend').click(function() {
+        const id = $(this).data('id');
+        const currentRecommend = $(this).data('recommend');
+        const newRecommend = currentRecommend == 1 ? 0 : 1;
+        const action = currentRecommend == 1 ? '取消推荐' : '推荐';
+        
+        if (!confirm('确定要' + action + '该工作流吗？')) {
+            return;
+        }
+        
+        $.post('/admin/workflow/set-recommend', {
+            id: id,
+            is_recommend: newRecommend
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('操作成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}

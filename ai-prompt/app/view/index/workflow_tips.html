@@ -1,0 +1,517 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-list-ul me-2"></i>目录导航
+                </div>
+                <div class="card-body p-2">
+                    <div class="list-group list-group-flush">
+                        <a href="#intro" class="list-group-item list-group-item-action border-0">什么是AI工作流</a>
+                        <a href="#benefits" class="list-group-item list-group-item-action border-0">工作流的优势</a>
+                        <a href="#design" class="list-group-item list-group-item-action border-0">工作流设计方法</a>
+                        <a href="#components" class="list-group-item list-group-item-action border-0">核心组件</a>
+                        <a href="#examples" class="list-group-item list-group-item-action border-0">实战案例</a>
+                        <a href="#tools" class="list-group-item list-group-item-action border-0">常用工具</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white py-4">
+                    <h1 class="h3 mb-0"><i class="bi bi-diagram-3 me-2"></i>AI工作流搭建技巧</h1>
+                    <p class="mb-0 mt-2 opacity-75">构建高效、可复用的AI工作流程，提升团队协作效率</p>
+                </div>
+                <div class="card-body p-5">
+                    <section id="intro" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-question-circle text-success me-2"></i>什么是AI工作流</h2>
+                        
+                        <div class="alert alert-success">
+                            <h6 class="fw-bold"><i class="bi bi-lightbulb"></i> 定义</h6>
+                            <p class="mb-0 mt-2">AI工作流是一系列有序的步骤和决策点，通过AI模型的协作来完成复杂任务。它将大任务分解为多个小步骤，每个步骤由特定的AI提示词或工具来完成。</p>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="text-center p-4">
+                                    <div class="bg-success bg-opacity-10 rounded-circle w-64 h-64 mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="bi bi-list-check text-success fs-1"></i>
+                                    </div>
+                                    <h5 class="fw-bold">步骤化</h5>
+                                    <p class="text-muted small mb-0">将复杂任务拆解为可执行的步骤</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-4">
+                                    <div class="bg-success bg-opacity-10 rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="bi bi-arrow-left-right text-success fs-1"></i>
+                                    </div>
+                                    <h5 class="fw-bold">可复用</h5>
+                                    <p class="text-muted small mb-0">一次设计，多次使用，持续优化</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-4">
+                                    <div class="bg-success bg-opacity-10 rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="bi bi-people text-success fs-1"></i>
+                                    </div>
+                                    <h5 class="fw-bold">可协作</h5>
+                                    <p class="text-muted small mb-0">团队成员可以共享和协同</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="benefits" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-gem text-warning me-2"></i>工作流的优势</h2>
+                        
+                        <div class="card bg-light border-0 mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold text-success"><i class="bi bi-check-circle me-2"></i>对个人的价值</h6>
+                                        <ul class="mt-2">
+                                            <li><strong>提升效率</strong> - 重复性工作自动化，节省时间</li>
+                                            <li><strong>保证质量</strong> - 标准化流程，结果更稳定</li>
+                                            <li><strong>知识沉淀</strong> - 把经验固化为可复用的流程</li>
+                                            <li><strong>降低门槛</strong> - 新手也能按照流程完成复杂任务</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold text-success"><i class="bi bi-check-circle me-2"></i>对团队的价值</h6>
+                                        <ul class="mt-2">
+                                            <li><strong>统一标准</strong> - 所有人使用相同的工作方法</li>
+                                            <li><strong>知识共享</strong> - 最佳实践在团队内传播</li>
+                                            <li><strong>新人培养</strong> - 帮助新人快速上手</li>
+                                            <li><strong>持续优化</strong> - 基于反馈持续改进流程</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="design" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-pencil-square text-primary me-2"></i>工作流设计方法</h2>
+                        
+                        <h5 class="fw-bold mb-3">五步设计法</h5>
+                        
+                        <div class="position-relative">
+                            {for start=1 to=5}
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <strong>{$i}</strong>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    {if $i == 1}
+                                    <h6 class="fw-bold">明确目标</h6>
+                                    <p class="text-muted mb-0">定义工作流要解决什么问题，预期产出是什么。越具体越好。</p>
+                                    <div class="p-2 bg-light rounded mt-2 small">
+                                        <span class="text-danger">❌ 不好："做内容营销"</span><br>
+                                        <span class="text-success">✅ 好："为新产品生成一篇小红书风格的产品推广文案"</span>
+                                    </div>
+                                    {elseif $i == 2}
+                                    <h6 class="fw-bold">拆解任务</h6>
+                                    <p class="text-muted mb-0">将大任务拆分成多个独立的子任务。每个子任务应该是单一、明确的。</p>
+                                    <div class="p-2 bg-light rounded mt-2 small">
+                                        <strong>拆解示例：</strong><br>
+                                        1. 分析产品特点和目标用户<br>
+                                        2. 确定文案主题和角度<br>
+                                        3. 生成多个标题备选<br>
+                                        4. 撰写正文内容<br>
+                                        5. 添加话题标签和CTA
+                                    </div>
+                                    {elseif $i == 3}
+                                    <h6 class="fw-bold">设计流程</h6>
+                                    <p class="text-muted mb-0">确定步骤的执行顺序，是否有分支或循环。考虑错误处理和异常情况。</p>
+                                    <div class="p-2 bg-light rounded mt-2 small">
+                                        <strong>考虑因素：</strong><br>
+                                        • 步骤之间是否有依赖关系？<br>
+                                        • 是否需要人工审核或决策？<br>
+                                        • 结果不满意时如何重试？<br>
+                                        • 如何处理失败情况？
+                                    </div>
+                                    {elseif $i == 4}
+                                    <h6 class="fw-bold">编写提示词</h6>
+                                    <p class="text-muted mb-0">为每个步骤编写高质量的提示词。参考提示词写作技巧。</p>
+                                    <div class="p-2 bg-light rounded mt-2 small">
+                                        <strong>提示词要点：</strong><br>
+                                        • 明确角色设定<br>
+                                        • 提供输入格式<br>
+                                        • 定义输出格式<br>
+                                        • 添加质量要求
+                                    </div>
+                                    {elseif $i == 5}
+                                    <h6 class="fw-bold">测试优化</h6>
+                                    <p class="text-muted mb-0">用实际数据测试工作流，根据输出结果持续优化提示词和流程设计。</p>
+                                    <div class="p-2 bg-light rounded mt-2 small">
+                                        <strong>优化维度：</strong><br>
+                                        • 输出质量是否达标？<br>
+                                        • 步骤是否可以合并或拆分？<br>
+                                        • 是否遗漏了边界情况？<br>
+                                        • 如何提高成功率？
+                                    </div>
+                                    {/if}
+                                </div>
+                            </div>
+                            {/for}
+                        </div>
+                    </section>
+                    
+                    <section id="components" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-boxes text-info me-2"></i>工作流核心组件</h2>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-bold"><i class="bi bi-arrow-right-circle text-primary me-2"></i>顺序步骤</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-3">步骤按固定顺序依次执行，前一步的输出作为后一步的输入。</p>
+                                        <div class="p-3 bg-light rounded text-center">
+                                            <i class="bi bi-box text-primary"></i>
+                                            <i class="bi bi-arrow-right mx-2 text-secondary"></i>
+                                            <i class="bi bi-box text-primary"></i>
+                                            <i class="bi bi-arrow-right mx-2 text-secondary"></i>
+                                            <i class="bi bi-box text-primary"></i>
+                                            <div class="mt-2 small text-muted">
+                                                步骤1 → 步骤2 → 步骤3
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-bold"><i class="bi bi-diagram-2 text-success me-2"></i>条件分支</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-3">根据某个条件的判断结果，选择不同的执行路径。</p>
+                                        <div class="p-3 bg-light rounded">
+                                            <div class="text-center mb-2">
+                                                <i class="bi bi-diamond text-warning"></i>
+                                                <div class="small text-muted mt-1">条件判断</div>
+                                            </div>
+                                            <div class="d-flex justify-content-around">
+                                                <div class="text-center">
+                                                    <i class="bi bi-arrow-down text-secondary"></i>
+                                                    <div class="small text-success">是 → 路径A</div>
+                                                </div>
+                                                <div class="text-center">
+                                                    <i class="bi bi-arrow-down text-secondary"></i>
+                                                    <div class="small text-danger">否 → 路径B</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-bold"><i class="bi bi-arrow-repeat text-danger me-2"></i>循环迭代</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-3">重复执行某个步骤直到满足特定条件或达到最大次数。</p>
+                                        <div class="p-3 bg-light rounded">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="text-center">
+                                                    <i class="bi bi-arrow-clockwise text-danger fs-2"></i>
+                                                    <div class="small mt-2">
+                                                        <strong>适用场景：</strong><br>
+                                                        • 优化不满意的结果<br>
+                                                        • 生成多个备选方案<br>
+                                                        • 批量处理同类任务
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0 fw-bold"><i class="bi bi-person-circle text-secondary me-2"></i>人工介入</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-3">关键节点需要人工审核、确认或补充信息。</p>
+                                        <div class="p-3 bg-light rounded">
+                                            <div class="text-center mb-2">
+                                                <i class="bi bi-box text-primary"></i>
+                                                <i class="bi bi-arrow-right mx-2 text-secondary"></i>
+                                                <i class="bi bi-person-badge text-warning fs-4"></i>
+                                                <i class="bi bi-arrow-right mx-2 text-secondary"></i>
+                                                <i class="bi bi-box text-primary"></i>
+                                            </div>
+                                            <div class="small text-muted text-center">
+                                                <strong>人工介入的时机：</strong><br>
+                                                • 重要内容发布前审核<br>
+                                                • 模糊信息需要澄清<br>
+                                                • 高风险决策确认
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="examples" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-journal-code text-dark me-2"></i>实战案例</h2>
+                        
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0 fw-bold"><i class="bi bi-pencil me-2"></i>案例1：内容创作工作流</h6>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-3">目标：为新产品创建一篇博客文章</h6>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="bg-light p-4 rounded">
+                                            <h6 class="fw-bold mb-3"><i class="bi bi-diagram-3 text-primary me-2"></i>流程图</h6>
+                                            <div class="d-flex flex-wrap align-items-center justify-content-center gap-2">
+                                                {foreach ['需求分析','大纲规划','标题生成','正文撰写','SEO优化','人工审核','发布'] as $step}
+                                                <div class="bg-white border rounded px-3 py-2 text-center">
+                                                    <small class="text-nowrap">{$step}</small>
+                                                </div>
+                                                {if !$step@last}
+                                                <i class="bi bi-arrow-right text-secondary"></i>
+                                                {/if}
+                                                {/foreach}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="fw-bold mb-3"><i class="bi bi-file-earmark-text text-info me-2"></i>各步骤详解</h6>
+                                
+                                <div class="accordion" id="workflowAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
+                                                步骤1：需求分析
+                                            </button>
+                                        </h2>
+                                        <div id="step1" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+                                                <pre class="bg-light p-3 rounded mb-0 small"><code>【角色】你是一位资深的内容策略分析师
+
+【任务】请分析以下产品信息，确定博客文章的核心卖点和目标读者：
+
+产品：智能笔记应用
+核心功能：AI自动总结、双向链接、模板库
+竞品优势：AI总结更准确、支持更多格式
+
+【输出格式】
+1. 目标读者画像（3类）
+2. 核心痛点（每个读者对应1个）
+3. 文章主题建议（3个）
+4. 最佳主题推荐及理由</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                                步骤2：大纲规划
+                                            </button>
+                                        </h2>
+                                        <div id="step2" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <pre class="bg-light p-3 rounded mb-0 small"><code>【角色】你是一位资深的博客编辑
+
+【任务】根据以下需求，设计文章大纲：
+
+主题：如何用AI笔记提升学习效率
+目标读者：大学生和职场新人
+字数要求：1500字左右
+
+【输出格式】
+文章大纲（Markdown格式）：
+# 标题
+## 引言（150字）
+   - 痛点描述
+   - 解决方案
+   - 本文结构预告
+   
+## 主体部分（分3-4个小节）
+   每个小节包含：
+   - 小节标题
+   - 核心观点
+   - 案例/数据
+   - 实践建议
+   
+## 结论（100字）
+   - 要点总结
+   - 行动建议
+   - 结语</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                                步骤3：标题生成
+                                            </button>
+                                        </h2>
+                                        <div id="step3" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <pre class="bg-light p-3 rounded mb-0 small"><code>【角色】你是一位爆款标题专家
+
+【任务】根据文章大纲，生成10个备选标题
+
+文章主题：如何用AI笔记提升学习效率
+
+【标题风格要求】
+1. 数字型（包含具体数字）
+2. 问题型（引发读者好奇）
+3. 利益型（强调好处）
+4. 对比型（新旧对比）
+
+【输出格式】
+1. 标题文本
+2. 类型标签
+3. 适用平台建议</code></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0 fw-bold"><i class="bi bi-bug me-2"></i>案例2：用户反馈处理工作流</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <h6 class="fw-bold"><i class="bi bi-info-circle"></i> 工作流特点</h6>
+                                    <ul class="mb-0 mt-2">
+                                        <li>包含<strong>条件分支</strong>：根据反馈类型选择不同处理路径</li>
+                                        <li>包含<strong>人工介入</strong>：重要问题需要人工确认</li>
+                                        <li>包含<strong>循环迭代</strong>：处理不满意时可以重跑</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="tools" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-tools text-secondary me-2"></i>常用工具推荐</h2>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-code-slash text-primary me-2"></i>工作流编排工具</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3">
+                                                <strong>LangChain</strong>
+                                                <p class="small text-muted mb-0">最流行的LLM应用开发框架，支持复杂工作流编排</p>
+                                            </li>
+                                            <li class="mb-3">
+                                                <strong>LangGraph</strong>
+                                                <p class="small text-muted mb-0">LangChain的工作流扩展，支持循环、条件分支</p>
+                                            </li>
+                                            <li class="mb-3">
+                                                <strong>AutoGen</strong>
+                                                <p class="small text-muted mb-0">微软开源的多智能体协作框架</p>
+                                            </li>
+                                            <li>
+                                                <strong>Coze/Dify</strong>
+                                                <p class="small text-muted mb-0">可视化工作流编排平台，无需代码</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-lightbulb text-success me-2"></i>设计建议</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3">
+                                                <strong>✓ 从简单开始</strong>
+                                                <p class="small text-muted mb-0">先设计线性工作流，再逐步增加复杂度</p>
+                                            </li>
+                                            <li class="mb-3">
+                                                <strong>✓ 文档化每个步骤</strong>
+                                                <p class="small text-muted mb-0">记录每个步骤的输入输出、预期结果</p>
+                                            </li>
+                                            <li class="mb-3">
+                                                <strong>✓ 持续迭代优化</strong>
+                                                <p class="small text-muted mb-0">根据实际运行结果不断调整</p>
+                                            </li>
+                                            <li>
+                                                <strong>✓ 分享到平台</strong>
+                                                <p class="small text-muted mb-0">将你的工作流发布到本平台，帮助他人</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <div class="text-center py-4 border-top">
+                        <p class="text-muted mb-3">设计了优秀的工作流？快来平台分享吧！</p>
+                        <a href="/workflow/create" class="btn btn-success me-2">
+                            <i class="bi bi-plus-circle"></i> 发布工作流
+                        </a>
+                        <a href="/workflow" class="btn btn-outline-secondary">
+                            <i class="bi bi-eye"></i> 浏览工作流
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 平滑滚动
+    $('a[href^="#"]').click(function(e) {
+        const target = $(this).attr('href');
+        if (target !== '#') {
+            e.preventDefault();
+            const offset = $(target).offset().top - 80;
+            $('html, body').animate({scrollTop: offset}, 300);
+        }
+    });
+    
+    // 滚动监听
+    $(window).scroll(function() {
+        const scrollPos = $(window).scrollTop() + 100;
+        $('section').each(function() {
+            const sectionTop = $(this).offset().top;
+            const sectionId = $(this).attr('id');
+            
+            if (scrollPos >= sectionTop) {
+                $('.list-group-item').removeClass('active');
+                $('a[href="#' + sectionId + '"]').addClass('active');
+            }
+        });
+    });
+});
+</script>
+{/block}

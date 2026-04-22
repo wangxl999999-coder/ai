@@ -1,0 +1,378 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 80px;">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-list-ul me-2"></i>目录导航
+                </div>
+                <div class="card-body p-2">
+                    <div class="list-group list-group-flush">
+                        <a href="#intro" class="list-group-item list-group-item-action border-0">什么是提示词</a>
+                        <a href="#principles" class="list-group-item list-group-item-action border-0">提示词设计原则</a>
+                        <a href="#structure" class="list-group-item list-group-item-action border-0">提示词基本结构</a>
+                        <a href="#examples" class="list-group-item list-group-item-action border-0">实用示例</a>
+                        <a href="#advanced" class="list-group-item list-group-item-action border-0">高级技巧</a>
+                        <a href="#common-errors" class="list-group-item list-group-item-action border-0">常见错误</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-4">
+                    <h1 class="h3 mb-0"><i class="bi bi-lightbulb me-2"></i>AI提示词写作技巧</h1>
+                    <p class="mb-0 mt-2 opacity-75">掌握提示词工程，让AI更好地理解你的需求</p>
+                </div>
+                <div class="card-body p-5">
+                    <section id="intro" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-question-circle text-primary me-2"></i>什么是提示词（Prompt）</h2>
+                        <p class="lead">提示词是你向AI模型输入的指令或问题，它直接决定了AI输出的质量和效果。</p>
+                        <p>一个好的提示词能够：</p>
+                        <ul>
+                            <li><strong>明确任务目标</strong> - 告诉AI你想要什么</li>
+                            <li><strong>设定角色和背景</strong> - 让AI以特定身份回答</li>
+                            <li><strong>定义输出格式</strong> - 控制AI的回复形式</li>
+                            <li><strong>提供示例和约束</strong> - 确保输出符合预期</li>
+                        </ul>
+                    </section>
+                    
+                    <section id="principles" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-star text-warning me-2"></i>提示词设计原则</h2>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold"><i class="bi bi-check-circle text-success me-2"></i>原则1：明确具体</h5>
+                                        <p class="mb-0">模糊的指令导致模糊的结果。越具体，效果越好。</p>
+                                        <div class="mt-3 p-3 bg-white rounded">
+                                            <small class="text-danger d-block">❌ 不好："写一篇关于AI的文章"</small>
+                                            <small class="text-success d-block mt-1">✅ 好："作为一名科技记者，写一篇800字关于生成式AI对职场影响的深度报道，要求包含3个真实案例"</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold"><i class="bi bi-person-circle text-primary me-2"></i>原则2：设定角色</h5>
+                                        <p class="mb-0">让AI扮演特定角色，可以获得更专业的回答。</p>
+                                        <div class="mt-3 p-3 bg-white rounded">
+                                            <small class="text-danger d-block">❌ 不好："解释什么是机器学习"</small>
+                                            <small class="text-success d-block mt-1">✅ 好："你是一名大学计算机教授，用通俗的语言向大一新生解释什么是机器学习"</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold"><i class="bi bi-file-earmark-text text-info me-2"></i>原则3：定义格式</h5>
+                                        <p class="mb-0">明确输出格式，让AI按照你想要的结构回复。</p>
+                                        <div class="mt-3 p-3 bg-white rounded">
+                                            <small class="text-success">✅ 示例："请用表格形式列出，包含：产品名称、价格、优缺点"</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold"><i class="bi bi-lightning text-warning me-2"></i>原则4：分步指导</h5>
+                                        <p class="mb-0">复杂任务可以拆分成多个步骤来完成。</p>
+                                        <div class="mt-3 p-3 bg-white rounded">
+                                            <small class="text-success">✅ 示例："第一步：分析用户需求；第二步：提出3个方案；第三步：比较各方案优劣"</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="structure" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-diagram-3 text-primary me-2"></i>提示词基本结构</h2>
+                        
+                        <div class="alert alert-info">
+                            <h6 class="fw-bold"><i class="bi bi-info-circle"></i> 标准提示词公式</h6>
+                            <p class="mb-0 mt-2"><strong>角色设定 + 任务描述 + 输出要求 + 约束条件</strong></p>
+                        </div>
+                        
+                        <div class="card bg-light border-0 mb-3">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-2">结构详解：</h6>
+                                <ol class="mb-0">
+                                    <li><strong>角色设定</strong> - 让AI扮演什么身份（专家、顾问、创作者等）</li>
+                                    <li><strong>任务描述</strong> - 具体要完成什么任务</li>
+                                    <li><strong>输出要求</strong> - 输出的格式、长度、语言风格等</li>
+                                    <li><strong>约束条件</strong> - 有什么限制或注意事项</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> 完整示例</h6>
+                            </div>
+                            <div class="card-body">
+                                <pre class="mb-0 bg-light p-3 rounded"><code>【角色设定】你是一位资深的产品经理，拥有10年互联网产品经验。
+
+【任务描述】我想开发一个在线学习平台，请帮我分析核心功能模块。
+
+【输出要求】
+1. 列出5个核心功能模块
+2. 每个模块包含：功能描述、用户价值、优先级
+3. 用表格形式呈现
+4. 最后给出一个MVP开发建议
+
+【约束条件】
+- 目标用户：职场人士
+- 预算有限，优先核心功能
+- 考虑移动端优先</code></pre>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="examples" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-journal-text text-success me-2"></i>实用示例</h2>
+                        
+                        <div class="accordion" id="examplesAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#example1">
+                                        示例1：文案写作
+                                    </button>
+                                </h2>
+                                <div id="example1" class="accordion-collapse collapse show" data-bs-parent="#examplesAccordion">
+                                    <div class="accordion-body">
+                                        <pre class="bg-light p-3 rounded"><code>你是一位优秀的广告文案策划师。
+
+请为一款新型降噪耳机撰写：
+1. 产品标题（20字以内）
+2. 产品卖点（3个，每点不超过30字）
+3. 电商详情页开头文案（100字左右）
+
+目标用户：经常出差的商务人士
+语言风格：专业、有品质感</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#example2">
+                                        示例2：代码生成
+                                    </button>
+                                </h2>
+                                <div id="example2" class="accordion-collapse collapse" data-bs-parent="#examplesAccordion">
+                                    <div class="accordion-body">
+                                        <pre class="bg-light p-3 rounded"><code>你是一位资深的前端开发工程师，精通Vue3和TypeScript。
+
+请帮我实现一个用户登录表单组件，要求：
+
+技术栈：Vue3 + TypeScript + Element Plus
+功能点：
+1. 手机号验证（中国手机号格式）
+2. 密码强度检测
+3. 发送验证码倒计时
+4. 表单提交和错误处理
+5. 记住密码功能
+
+输出格式：
+- 完整的Vue组件代码
+- 代码注释
+- 使用说明</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#example3">
+                                        示例3：数据分析
+                                    </button>
+                                </h2>
+                                <div id="example3" class="accordion-collapse collapse" data-bs-parent="#examplesAccordion">
+                                    <div class="accordion-body">
+                                        <pre class="bg-light p-3 rounded"><code>你是一位数据分析师，擅长从复杂数据中提取洞察。
+
+我有以下销售数据：
+- 月度销售额：1月50万，2月65万，3月72万，4月80万，5月68万，6月90万
+- 主要产品：A(30%)、B(45%)、C(25%)
+- 客单价：平均2500元
+
+请帮我分析：
+1. 销售趋势分析
+2. 产品表现评估
+3. 业务建议
+
+输出格式：用Markdown格式，包含数据可视化的文字描述</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="advanced" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-rocket-takeoff text-danger me-2"></i>高级技巧</h2>
+                        
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-arrow-repeat text-primary me-2"></i>迭代优化</h5>
+                                        <p>提示词不是一次写好的，需要根据AI的输出不断调整优化：</p>
+                                        <ol class="small">
+                                            <li>先用基础版本测试</li>
+                                            <li>分析输出中的问题</li>
+                                            <li>针对性修改提示词</li>
+                                            <li>再次测试验证</li>
+                                            <li>重复上述步骤</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-chat-left-text text-success me-2"></i>对话式提示</h5>
+                                        <p>将复杂任务拆分成多轮对话：</p>
+                                        <div class="p-3 bg-light rounded small">
+                                            <p class="mb-2"><strong>第一轮：</strong>"分析这个需求的核心要点"</p>
+                                            <p class="mb-2"><strong>第二轮：</strong>"基于分析，提出3个方案"</p>
+                                            <p class="mb-0"><strong>第三轮：</strong>"选择方案2，详细实现"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-journal-check text-warning me-2"></i>Few-Shot提示</h5>
+                                        <p>提供少量示例让AI学习你的期望：</p>
+                                        <div class="p-3 bg-light rounded small">
+                                            <p class="mb-2">将用户评价转换为情感标签：</p>
+                                            <p class="mb-1">示例1："产品很好用" → 正面</p>
+                                            <p class="mb-1">示例2："发货太慢了" → 负面</p>
+                                            <p class="mb-0">现在分析："客服态度一般，但产品质量不错"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-tools text-info me-2"></i>思维链（CoT）</h5>
+                                        <p>让AI展示推理过程，提高复杂任务准确率：</p>
+                                        <div class="p-3 bg-light rounded small">
+                                            <p class="mb-2"><strong>关键短语：</strong></p>
+                                            <ul class="mb-0">
+                                                <li>"一步一步来分析"</li>
+                                                <li>"先思考，再回答"</li>
+                                                <li>"解释你的推理过程"</li>
+                                                <li>"详细说明每个步骤"</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="common-errors" class="mb-5">
+                        <h2 class="h4 mb-3"><i class="bi bi-exclamation-triangle text-danger me-2"></i>常见错误</h2>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="15%">类型</th>
+                                        <th width="40%">错误示例</th>
+                                        <th width="45%">问题分析</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-danger">模糊</span></td>
+                                        <td>"帮我写点东西"</td>
+                                        <td>缺少具体的主题、格式、长度要求</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning">信息不足</span></td>
+                                        <td>"分析这个产品"</td>
+                                        <td>没有提供产品的具体信息</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-info">任务过载</span></td>
+                                        <td>"帮我开发一个完整的APP"</td>
+                                        <td>任务过于复杂，应该拆分成多个步骤</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">缺少示例</span></td>
+                                        <td>"用特定风格写作"</td>
+                                        <td>"特定风格"太模糊，应该给出示例</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-dark">语言问题</span></td>
+                                        <td>混用中英文术语</td>
+                                        <td>保持语言一致性，避免AI混淆</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    
+                    <div class="text-center py-4 border-top">
+                        <p class="text-muted mb-3">掌握了这些技巧？快去平台发布你的提示词吧！</p>
+                        <a href="/prompt/create" class="btn btn-primary me-2">
+                            <i class="bi bi-plus-circle"></i> 发布提示词
+                        </a>
+                        <a href="/prompt" class="btn btn-outline-secondary">
+                            <i class="bi bi-eye"></i> 浏览提示词
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 平滑滚动
+    $('a[href^="#"]').click(function(e) {
+        const target = $(this).attr('href');
+        if (target !== '#') {
+            e.preventDefault();
+            const offset = $(target).offset().top - 80;
+            $('html, body').animate({scrollTop: offset}, 300);
+        }
+    });
+    
+    // 滚动监听激活菜单
+    $(window).scroll(function() {
+        const scrollPos = $(window).scrollTop() + 100;
+        $('section').each(function() {
+            const sectionTop = $(this).offset().top;
+            const sectionId = $(this).attr('id');
+            
+            if (scrollPos >= sectionTop) {
+                $('.list-group-item').removeClass('active');
+                $('a[href="#' + sectionId + '"]').addClass('active');
+            }
+        });
+    });
+});
+</script>
+{/block}

@@ -1,0 +1,65 @@
+{extend name="layout/user_base" /}
+
+{block name="user_content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>个人资料</h5>
+    </div>
+    <div class="card-body">
+        <form id="profileForm">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold">昵称</label>
+                    <input type="text" class="form-control" name="nickname" value="{$userInfo.nickname}" placeholder="请输入昵称">
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold">手机号</label>
+                    <input type="text" class="form-control" value="{$userInfo.phone|substr_replace='****',3,4}" disabled>
+                    <div class="form-text">手机号暂时不支持修改</div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label fw-bold">注册时间</label>
+                <input type="text" class="form-control" value="{$userInfo.create_time|date='Y-m-d H:i:s'}" disabled>
+            </div>
+            
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> 保存修改
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    $('#profileForm').submit(function(e) {
+        e.preventDefault();
+        
+        const nickname = $('input[name="nickname"]').val();
+        
+        if (!nickname.trim()) {
+            toastr.error('请输入昵称');
+            return;
+        }
+        
+        $.post('/user/update-profile', {
+            nickname: nickname
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success(res.msg);
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}
