@@ -1,0 +1,184 @@
+{extend name="layout/user_base" /}
+
+{block name="user_content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>个人设置</h5>
+    </div>
+    <div class="card-body">
+        <form id="settingForm">
+            <!-- 头像设置 -->
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-person-circle me-2"></i>头像设置</h6>
+                <div class="d-flex align-items-center">
+                    <img src="{$userInfo.avatar}" class="avatar-preview" id="avatarPreview">
+                    <div class="ms-4">
+                        <div class="mb-2">
+                            <label for="avatarInput" class="btn btn-outline-primary">
+                                <i class="bi bi-upload"></i> 选择图片
+                            </label>
+                            <input type="file" id="avatarInput" name="avatar" accept="image/*" class="d-none">
+                        </div>
+                        <p class="text-muted small mb-0">支持 JPG、PNG 格式，建议尺寸 200x200</p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- 昵称设置 -->
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-person me-2"></i>昵称设置</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">昵称</label>
+                        <input type="text" class="form-control" name="nickname" value="{$userInfo.nickname}" placeholder="请输入昵称" maxlength="20">
+                        <div class="form-text">昵称最多20个字符</div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- 密码设置 -->
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-lock me-2"></i>修改密码</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">原密码 <span class="text-muted small">(留空则不修改)</span></label>
+                        <input type="password" class="form-control" name="old_password" placeholder="请输入原密码">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">新密码</label>
+                        <input type="password" class="form-control" name="password" placeholder="请输入新密码">
+                        <div class="form-text">密码长度6-20位</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">确认新密码</label>
+                        <input type="password" class="form-control" name="confirm_password" placeholder="请再次输入新密码">
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- 账号信息 -->
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i>账号信息</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">手机号</label>
+                        <input type="text" class="form-control" value="{$userInfo.phone|substr_replace='****',3,4}" disabled>
+                        <div class="form-text">手机号暂时不支持修改</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">注册时间</label>
+                        <input type="text" class="form-control" value="{$userInfo.create_time|date='Y-m-d H:i'}" disabled>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="bi bi-check-circle"></i> 保存修改
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 头像预览
+    $('#avatarInput').change(function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#avatarPreview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // 表单提交
+    $('#settingForm').submit(function(e) {
+        e.preventDefault();
+        
+        const oldPassword = $('input[name="old_password"]').val();
+        const password = $('input[name="password"]').val();
+        const confirmPassword = $('input[name="confirm_password"]').val();
+        const nickname = $('input[name="nickname"]').val();
+        
+        // 验证昵称
+        if (!nickname.trim()) {
+            toastr.error('请输入昵称');
+            return;
+        }
+        
+        // 验证密码
+        if (oldPassword) {
+            if (!password) {
+                toastr.error('请输入新密码');
+                return;
+            }
+            if (password.length < 6 || password.length > 20) {
+                toastr.error('密码长度应为6-20位');
+                return;
+            }
+            if (password !== confirmPassword) {
+                toastr.error('两次输入的密码不一致');
+                return;
+            }
+        }
+        
+        // 如果有头像文件，先上传
+        const avatarFile = $('#avatarInput')[0].files[0];
+        const formData = new FormData();
+        
+        // 添加表单数据
+        formData.append('nickname', nickname);
+        if (oldPassword) {
+            formData.append('old_password', oldPassword);
+            formData.append('password', password);
+        }
+        if (avatarFile) {
+            formData.append('avatar', avatarFile);
+        }
+        
+        const btn = $('#submitBtn');
+        const originalText = btn.html();
+        btn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> 保存中...');
+        
+        $.ajax({
+            url: '/user/update-profile',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(res) {
+                if (res.code === 200) {
+                    toastr.success(res.msg);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 500);
+                } else {
+                    toastr.error(res.msg);
+                }
+            },
+            error: function() {
+                toastr.error('保存失败，请重试');
+            },
+            complete: function() {
+                btn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+});
+</script>
+{/block}

@@ -1,0 +1,141 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">首页</a></li>
+            <li class="breadcrumb-item"><a href="/prompt">提示词库</a></li>
+            <li class="breadcrumb-item active">发布提示词</li>
+        </ol>
+    </nav>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-plus-circle text-primary"></i> 发布提示词
+                        <small class="text-muted fw-normal ms-2">审核通过后可获得 {$config.publish_prompt_points|default=2} 积分奖励</small>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="promptForm">
+                        <input type="hidden" name="id" value="{$prompt.id|default=0}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                标题 <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" name="title" value="{$prompt.title|default=''}" placeholder="请输入提示词标题" maxlength="100">
+                            <div class="form-text">标题要简洁明了，能够准确描述提示词的用途</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                分类 <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" name="category_id">
+                                <option value="">请选择分类</option>
+                                {foreach $categories as $category}
+                                <option value="{$category.id}" {if isset($prompt) && $prompt.category_id == $category.id}selected{/if}>
+                                    {$category.name}
+                                </option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">简介</label>
+                            <textarea class="form-control" name="description" rows="3" placeholder="简单描述一下这个提示词的用途和特点...">{$prompt.description|default=''}</textarea>
+                            <div class="form-text">简介将在列表页展示，帮助其他用户快速了解内容</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                提示词内容 <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" name="content" rows="12" placeholder="请输入完整的提示词内容...">{$prompt.content|default=''}</textarea>
+                            <div class="form-text">
+                                提示词内容将在用户支付积分后完整展示，请确保内容完整可用
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">标签</label>
+                            <input type="text" class="form-control" name="tags" value="{$prompt.tags|default=''}" placeholder="请输入标签，多个标签用逗号分隔">
+                            <div class="form-text">例如：文案写作,创意灵感,效率提升</div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h6 class="fw-bold"><i class="bi bi-info-circle"></i> 温馨提示</h6>
+                            <ul class="mb-0 small">
+                                <li>发布的提示词需要经过审核，审核通过后会奖励积分</li>
+                                <li>其他用户查看您的提示词需要支付积分，您将获得相应收益</li>
+                                <li>请确保内容原创、优质，拒绝低质、重复内容</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-secondary" onclick="history.back()">
+                                取消
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="bi bi-check-circle"></i> 发布提示词
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 表单提交
+    $('#promptForm').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = $(this).serialize();
+        const title = $('input[name="title"]').val();
+        const categoryId = $('select[name="category_id"]').val();
+        const content = $('textarea[name="content"]').val();
+        
+        if (!title.trim()) {
+            toastr.error('请输入标题');
+            return;
+        }
+        
+        if (!categoryId) {
+            toastr.error('请选择分类');
+            return;
+        }
+        
+        if (!content.trim()) {
+            toastr.error('请输入提示词内容');
+            return;
+        }
+        
+        const btn = $('#submitBtn');
+        const originalText = btn.html();
+        btn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> 提交中...');
+        
+        $.post('/prompt/save', formData, function(res) {
+            if (res.code === 200) {
+                toastr.success(res.msg);
+                setTimeout(function() {
+                    location.href = res.data.url || '/user/my-prompts';
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json').always(function() {
+            btn.prop('disabled', false).html(originalText);
+        });
+    });
+});
+</script>
+{/block}

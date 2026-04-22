@@ -1,0 +1,116 @@
+{extend name="layout/user_base" /}
+
+{block name="user_content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-house me-2"></i>欢迎回来，{$userInfo.nickname}</h5>
+    </div>
+    <div class="card-body">
+        <!-- 统计数据 -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="bg-light rounded p-3 text-center">
+                    <h3 class="text-primary mb-0">{$promptCount}</h3>
+                    <small class="text-muted">发布的提示词</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="bg-light rounded p-3 text-center">
+                    <h3 class="text-success mb-0">{$workflowCount}</h3>
+                    <small class="text-muted">发布的工作流</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="bg-light rounded p-3 text-center">
+                    <h3 class="text-warning mb-0">{$favoriteCount}</h3>
+                    <small class="text-muted">收藏的内容</small>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="bg-light rounded p-3 text-center">
+                    <h3 class="text-danger mb-0">{$commentCount}</h3>
+                    <small class="text-muted">发表的评论</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 快捷操作 -->
+        <div class="card bg-light border-0 mb-4">
+            <div class="card-body">
+                <h6 class="mb-3"><i class="bi bi-lightning-charge me-2"></i>快捷操作</h6>
+                <div class="row g-3">
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/prompt/create" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-circle me-2"></i>发布提示词
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/workflow/create" class="btn btn-success w-100">
+                            <i class="bi bi-plus-circle me-2"></i>发布工作流
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/user/my-favorites" class="btn btn-warning w-100">
+                            <i class="bi bi-heart me-2"></i>查看收藏
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="/user/setting" class="btn btn-secondary w-100">
+                            <i class="bi bi-gear me-2"></i>账号设置
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 待审核提醒 -->
+        {if $pendingCount > 0}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            您有 <strong>{$pendingCount}</strong> 条内容正在审核中，请耐心等待。
+            <a href="/user/my-prompts" class="alert-link ms-2">查看详情</a>
+        </div>
+        {/if}
+        
+        <!-- 最近积分记录 -->
+        {if !empty($recentPoints)}
+        <h6 class="mb-3"><i class="bi bi-clock-history me-2"></i>最近积分记录</h6>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>时间</th>
+                        <th>类型</th>
+                        <th>积分</th>
+                        <th>余额</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $recentPoints as $item}
+                    <tr>
+                        <td class="text-muted small">{$item.create_time|date='Y-m-d H:i'}</td>
+                        <td>
+                            {if $item.type == 1}
+                            <span class="badge bg-success">收入</span>
+                            {else}
+                            <span class="badge bg-danger">支出</span>
+                            {/if}
+                        </td>
+                        <td class="fw-bold {if $item.type == 1}text-success{else}text-danger{/if}">
+                            {if $item.type == 1}+{else}-{/if}{$item.points}
+                        </td>
+                        <td><span class="badge bg-secondary">{$item.balance}</span></td>
+                        <td class="small text-muted">{$item.description}</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-end">
+            <a href="/user/my-points" class="text-decoration-none small">查看更多 <i class="bi bi-chevron-right"></i></a>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}

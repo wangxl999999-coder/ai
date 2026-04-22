@@ -1,0 +1,444 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">首页</a></li>
+            <li class="breadcrumb-item"><a href="/prompt">提示词库</a></li>
+            <li class="breadcrumb-item active">{$prompt.title}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <!-- 主内容 -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary bg-opacity-10 text-primary me-2">
+                            {$prompt.category.name|default='未分类'}
+                        </span>
+                        <small class="text-muted">{$prompt.create_time|format_time}</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm {if $isFavorited}btn-danger{else}btn-outline-danger{/if} favorite-btn" data-id="{$prompt.id}">
+                            <i class="bi bi-heart{if $isFavorited}-fill{/if}"></i> 收藏
+                            <span class="badge bg-transparent">{$prompt.favorite_count}</span>
+                        </button>
+                        <button class="btn btn-sm {if $isLiked}btn-primary{else}btn-outline-primary{/if} like-btn" data-id="{$prompt.id}">
+                            <i class="bi bi-hand-thumbs-up{if $isLiked}-fill{/if}"></i> 点赞
+                            <span class="badge bg-transparent like-count">{$prompt.like_count}</span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="shareContent()">
+                            <i class="bi bi-share"></i> 分享
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title mb-3">{$prompt.title}</h2>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="{$prompt.user.avatar}" class="rounded-circle" width="40" height="40">
+                        <div class="ms-3">
+                            <h6 class="mb-0">{$prompt.user.nickname}</h6>
+                            <small class="text-muted">
+                                <i class="bi bi-eye me-1"></i>{$prompt.view_count} 次浏览
+                                <i class="bi bi-chat me-1 ms-2"></i>{$prompt.comment_count} 条评论
+                            </small>
+                        </div>
+                    </div>
+                    
+                    {if $prompt.description}
+                    <div class="alert alert-light mb-4">
+                        <h6 class="fw-bold"><i class="bi bi-info-circle text-primary"></i> 简介</h6>
+                        <p class="mb-0">{$prompt.description}</p>
+                    </div>
+                    {/if}
+                    
+                    {if $prompt.tags}
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-tags text-warning"></i> 标签</h6>
+                        {foreach explode(',', $prompt.tags) as $tag}
+                        <a href="/search?keyword={$tag}&type=prompt" class="badge bg-secondary bg-opacity-10 text-secondary me-1 mb-1 text-decoration-none">
+                            {$tag}
+                        </a>
+                        {/foreach}
+                    </div>
+                    {/if}
+                    
+                    <!-- 内容区域 -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-file-text text-success"></i> 内容</h6>
+                        
+                        {if $isPurchased || $prompt.user_id == $userId}
+                        <div class="border rounded p-4 bg-light">
+                            <div class="d-flex justify-content-end mb-2">
+                                <button class="btn btn-sm btn-outline-primary copy-btn" data-clipboard="{$prompt.content|escape}">
+                                    <i class="bi bi-clipboard"></i> 复制内容
+                                </button>
+                            </div>
+                            <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word;">{$prompt.content|raw}</pre>
+                        </div>
+                        {else}
+                        <div class="border rounded p-4 bg-light text-center">
+                            <i class="bi bi-lock text-muted fs-1"></i>
+                            <p class="text-muted mt-3">此内容需要支付 <strong class="text-primary">{$prompt.points_fee}</strong> 积分查看</p>
+                            <p class="text-muted small">发布提示词或工作流审核通过后可获得积分奖励</p>
+                            
+                            {if $userId}
+                            <button class="btn btn-primary purchase-btn" data-id="{$prompt.id}">
+                                <i class="bi bi-coin"></i> 支付积分查看
+                            </button>
+                            {else}
+                            <a href="/user/login" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> 登录后查看
+                            </a>
+                            {/if}
+                        </div>
+                        
+                        <!-- 预览内容 -->
+                        <div class="mt-3">
+                            <h6 class="fw-bold text-muted mb-2">内容预览</h6>
+                            <div class="border rounded p-4 bg-light text-muted">
+                                <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word;">{$prompt.preview|raw}...</pre>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 评论区域 -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-chat-dots"></i> 评论 ({$prompt.comment_count})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- 发表评论 -->
+                    {if $userId}
+                    <form class="mb-4 comment-form" data-id="{$prompt.id}" data-type="prompt">
+                        <div class="d-flex gap-3">
+                            <img src="{$userInfo.avatar}" class="rounded-circle" width="40" height="40">
+                            <div class="flex-grow-1">
+                                <textarea class="form-control" name="content" rows="3" placeholder="写下你的评论..."></textarea>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        发表评论
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {else}
+                    <div class="text-center py-3 mb-4 bg-light rounded">
+                        <p class="text-muted mb-2">登录后发表评论</p>
+                        <a href="/user/login" class="btn btn-outline-primary btn-sm">立即登录</a>
+                    </div>
+                    {/if}
+                    
+                    <!-- 评论列表 -->
+                    {if !empty($comments)}
+                    <div class="comments-list">
+                        {foreach $comments as $comment}
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="d-flex gap-3">
+                                <img src="{$comment.user.avatar}" class="rounded-circle" width="40" height="40">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">{$comment.user.nickname}</h6>
+                                            <small class="text-muted">{$comment.create_time|format_time}</small>
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 mb-2">{$comment.content}</p>
+                                    <div class="d-flex gap-3">
+                                        <button class="btn btn-sm btn-link text-muted p-0 like-comment-btn" data-id="{$comment.id}">
+                                            <i class="bi bi-hand-thumbs-up{if $comment.is_liked}-fill{/if}"></i>
+                                            {$comment.like_count}
+                                        </button>
+                                        <button class="btn btn-sm btn-link text-muted p-0 reply-btn" data-id="{$comment.id}" data-nickname="{$comment.user.nickname}">
+                                            <i class="bi bi-reply"></i> 回复
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- 子评论 -->
+                                    {if !empty($comment.children)}
+                                    <div class="ms-4 mt-3 border-start ps-3">
+                                        {foreach $comment.children as $child}
+                                        <div class="mb-3">
+                                            <div class="d-flex gap-2">
+                                                <img src="{$child.user.avatar}" class="rounded-circle" width="28" height="28">
+                                                <div class="flex-grow-1">
+                                                    <div>
+                                                        <h6 class="small mb-0">{$child.user.nickname}</h6>
+                                                        <small class="text-muted">{$child.create_time|format_time}</small>
+                                                    </div>
+                                                    <p class="small mt-1 mb-1">{$child.content}</p>
+                                                    <button class="btn btn-sm btn-link text-muted p-0 small like-comment-btn" data-id="{$child.id}">
+                                                        <i class="bi bi-hand-thumbs-up{if $child.is_liked}-fill{/if}"></i>
+                                                        {$child.like_count}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/foreach}
+                                    </div>
+                                    {/if}
+                                    
+                                    <!-- 回复表单 -->
+                                    <div class="reply-form mt-2 d-none">
+                                        <form class="reply-comment-form" data-id="{$comment.id}" data-type="prompt" data-target-id="{$prompt.id}">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">回复 {$comment.user.nickname}</span>
+                                                <input type="text" class="form-control" name="content" placeholder="输入回复内容...">
+                                                <button class="btn btn-outline-primary" type="submit">发送</button>
+                                                <button class="btn btn-outline-secondary cancel-reply-btn" type="button">取消</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/foreach}
+                    </div>
+                    {else}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-chat-dots fs-1"></i>
+                        <p class="mt-2">暂无评论，快来抢沙发吧！</p>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 侧边栏 -->
+        <div class="col-lg-4">
+            <!-- 相关推荐 -->
+            {if !empty($relatedPrompts)}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-link-45deg me-2"></i>相关推荐
+                </div>
+                <div class="card-body">
+                    {foreach $relatedPrompts as $item}
+                    <div class="d-flex gap-3 mb-3 pb-3 border-bottom">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                <a href="/prompt/detail?id={$item.id}" class="text-decoration-none text-dark">
+                                    {$item.title}
+                                </a>
+                            </h6>
+                            <small class="text-muted">
+                                <i class="bi bi-eye"></i> {$item.view_count}
+                                <i class="bi bi-heart ms-2"></i> {$item.like_count}
+                            </small>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+            {/if}
+            
+            <!-- 作者信息 -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-person me-2"></i>关于作者
+                </div>
+                <div class="card-body text-center">
+                    <img src="{$prompt.user.avatar}" class="rounded-circle" width="80" height="80">
+                    <h5 class="mt-3 mb-1">{$prompt.user.nickname}</h5>
+                    <p class="text-muted small mb-3">{$prompt.user.phone|substr_replace='****',3,4}</p>
+                    <div class="d-flex justify-content-around text-center border-top pt-3">
+                        <div>
+                            <h6 class="fw-bold mb-0">{$prompt.user.points}</h6>
+                            <small class="text-muted">积分</small>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">{:app\model\Prompt::where('user_id', $prompt.user.id)->count()}</h6>
+                            <small class="text-muted">提示词</small>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">{:app\model\Workflow::where('user_id', $prompt.user.id)->count()}</h6>
+                            <small class="text-muted">工作流</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+<script>
+$(function() {
+    // 复制功能
+    new ClipboardJS('.copy-btn', {
+        text: function(trigger) {
+            return $(trigger).data('clipboard');
+        }
+    }).on('success', function(e) {
+        toastr.success('已复制到剪贴板');
+        e.clearSelection();
+    }).on('error', function(e) {
+        toastr.error('复制失败，请手动复制');
+    });
+    
+    // 收藏
+    $('.favorite-btn').click(function() {
+        const id = $(this).data('id');
+        const btn = $(this);
+        
+        $.post('/prompt/toggle-favorite', { id: id }, function(res) {
+            if (res.code === 200) {
+                if (res.data.is_favorited) {
+                    btn.removeClass('btn-outline-danger').addClass('btn-danger');
+                    btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                    toastr.success('收藏成功');
+                } else {
+                    btn.removeClass('btn-danger').addClass('btn-outline-danger');
+                    btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                    toastr.success('已取消收藏');
+                }
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 点赞
+    $('.like-btn').click(function() {
+        const id = $(this).data('id');
+        const btn = $(this);
+        
+        $.post('/prompt/toggle-like', { id: id }, function(res) {
+            if (res.code === 200) {
+                if (res.data.is_liked) {
+                    btn.removeClass('btn-outline-primary').addClass('btn-primary');
+                    btn.find('i').removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
+                } else {
+                    btn.removeClass('btn-primary').addClass('btn-outline-primary');
+                    btn.find('i').removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
+                }
+                btn.find('.like-count').text(res.data.like_count);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 购买
+    $('.purchase-btn').click(function() {
+        if (!confirm('确定要支付积分查看此内容吗？')) return;
+        
+        const id = $(this).data('id');
+        
+        $.post('/prompt/purchase', { id: id }, function(res) {
+            if (res.code === 200) {
+                toastr.success(res.msg);
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 发表评论
+    $('.comment-form').submit(function(e) {
+        e.preventDefault();
+        
+        const id = $(this).data('id');
+        const type = $(this).data('type');
+        const content = $(this).find('textarea[name="content"]').val();
+        
+        if (!content.trim()) {
+            toastr.error('请输入评论内容');
+            return;
+        }
+        
+        $.post('/' + type + '/comment', {
+            id: id,
+            content: content
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success(res.msg);
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 回复按钮
+    $('.reply-btn').click(function() {
+        const id = $(this).data('id');
+        $('.reply-form').addClass('d-none');
+        $(this).closest('.flex-grow-1').find('.reply-form').removeClass('d-none');
+    });
+    
+    // 取消回复
+    $('.cancel-reply-btn').click(function() {
+        $(this).closest('.reply-form').addClass('d-none');
+    });
+    
+    // 发表回复
+    $('.reply-comment-form').submit(function(e) {
+        e.preventDefault();
+        
+        const parentId = $(this).data('id');
+        const type = $(this).data('type');
+        const targetId = $(this).data('target-id');
+        const content = $(this).find('input[name="content"]').val();
+        
+        if (!content.trim()) {
+            toastr.error('请输入回复内容');
+            return;
+        }
+        
+        $.post('/' + type + '/comment', {
+            id: targetId,
+            content: content,
+            parent_id: parentId
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success(res.msg);
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 评论点赞
+    $('.like-comment-btn').click(function() {
+        // 评论点赞功能可扩展
+        toastr.info('功能开发中...');
+    });
+});
+
+// 分享功能
+function shareContent() {
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            url: window.location.href
+        });
+    } else {
+        // 复制链接
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            toastr.success('链接已复制到剪贴板');
+        });
+    }
+}
+</script>
+{/block}
