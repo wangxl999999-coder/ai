@@ -23,6 +23,14 @@ class AuthController extends BaseController
             return redirect(url('/'));
         }
         
+        $userId = Session::get('user_id');
+        $userInfo = Session::get('user_info');
+        
+        View::assign([
+            'userId' => $userId,
+            'userInfo' => $userInfo,
+        ]);
+        
         return View::fetch('auth/login');
     }
     
@@ -84,6 +92,14 @@ class AuthController extends BaseController
         if (Session::has('user_id')) {
             return redirect(url('/'));
         }
+        
+        $userId = Session::get('user_id');
+        $userInfo = Session::get('user_info');
+        
+        View::assign([
+            'userId' => $userId,
+            'userInfo' => $userInfo,
+        ]);
         
         return View::fetch('auth/register');
     }
@@ -238,6 +254,14 @@ class AuthController extends BaseController
         if (Session::has('user_id')) {
             return redirect(url('/'));
         }
+        
+        $userId = Session::get('user_id');
+        $userInfo = Session::get('user_info');
+        
+        View::assign([
+            'userId' => $userId,
+            'userInfo' => $userInfo,
+        ]);
         
         return View::fetch('auth/forgot_password');
     }
