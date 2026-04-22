@@ -35,7 +35,7 @@
         
         {if $info.tags}
         <div class="mb-4">
-            {foreach $info.tags|explode=',',### as $tag}
+            {foreach :explode(',', $info.tags) as $tag}
             <span class="badge bg-secondary bg-opacity-10 text-secondary me-2">{$tag}</span>
             {/foreach}
         </div>
