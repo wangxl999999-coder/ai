@@ -66,17 +66,6 @@ function password_encrypt($password)
 }
 
 /**
- * 密码验证
- * @param string $password
- * @param string $hash
- * @return bool
- */
-function password_verify($password, $hash)
-{
-    return password_verify($password, $hash);
-}
-
-/**
  * 获取客户端真实IP
  * @return string
  */
