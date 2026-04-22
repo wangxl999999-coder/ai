@@ -5,6 +5,8 @@ namespace app;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
+use think\facade\Session;
+use think\facade\View;
 
 /**
  * 控制器基础类
@@ -36,6 +38,18 @@ abstract class BaseController
     protected $middleware = [];
 
     /**
+     * 当前登录用户ID
+     * @var int|null
+     */
+    protected $userId = null;
+
+    /**
+     * 当前登录用户信息
+     * @var array|null
+     */
+    protected $userInfo = null;
+
+    /**
      * 构造方法
      * @access public
      * @param  App  $app  应用对象
@@ -47,6 +61,9 @@ abstract class BaseController
 
         // 控制器初始化
         $this->initialize();
+
+        // 初始化用户信息
+        $this->initUserInfo();
     }
 
     // 初始化
@@ -54,10 +71,24 @@ abstract class BaseController
     {}
 
     /**
+     * 初始化用户信息并传递到视图
+     */
+    protected function initUserInfo()
+    {
+        $this->userId = Session::get('user_id');
+        $this->userInfo = Session::get('user_info');
+        
+        View::assign([
+            'userId' => $this->userId,
+            'userInfo' => $this->userInfo,
+        ]);
+    }
+
+    /**
      * 验证数据
      * @access protected
      * @param  array        $data     数据
-     * @param  string|array $validate 验证器名或者验证规则数组
+     * @param  string|array $validate  验证器名或者验证规则数组
      * @param  array        $message  提示信息
      * @param  bool         $batch    是否批量验证
      * @return array|string|true

@@ -194,7 +194,7 @@ class WorkflowController extends BaseController
         $workflow = Workflow::find($id);
         
         if (!$workflow || $workflow->user_id != $userId) {
-            return redirect(url('/user/my_workflows'));
+            return redirect(url('/user/my-workflows'));
         }
         
         // 获取分类
@@ -279,7 +279,7 @@ class WorkflowController extends BaseController
             ]);
         }
         
-        return $this->success('保存成功', ['url' => (string)url('/user/my_workflows')]);
+        return $this->success('保存成功', ['url' => (string)url('/user/my-workflows')]);
     }
     
     /**
