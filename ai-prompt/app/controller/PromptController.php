@@ -194,7 +194,7 @@ class PromptController extends BaseController
         $prompt = Prompt::find($id);
         
         if (!$prompt || $prompt->user_id != $userId) {
-            return redirect(url('/user/my_prompts'));
+            return redirect(url('/user/my-prompts'));
         }
         
         // 获取分类
@@ -279,7 +279,7 @@ class PromptController extends BaseController
             ]);
         }
         
-        return $this->success('保存成功', ['url' => (string)url('/user/my_prompts')]);
+        return $this->success('保存成功', ['url' => (string)url('/user/my-prompts')]);
     }
     
     /**
