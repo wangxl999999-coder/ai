@@ -1,0 +1,211 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <!-- Hero区域 -->
+    <section class="py-5 text-center">
+        <div class="row py-lg-5">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h1 class="fw-light mb-4">
+                    <span class="text-primary">AI提示词</span> 与 <span class="text-success">工作流</span> 平台
+                </h1>
+                <p class="lead text-muted mb-4">
+                    探索优质AI提示词，提升工作效率。发布内容获得积分，用积分查看更多精彩内容。
+                </p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="/prompt/create" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-plus-circle"></i> 发布提示词
+                    </a>
+                    <a href="/workflow/create" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-diagram-3"></i> 发布工作流
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section class="py-4 mb-4">
+        <div class="row g-4">
+            <div class="col-lg-3 col-6">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body py-4">
+                        <i class="bi bi-file-text fs-1 text-primary"></i>
+                        <h3 class="mt-2 mb-0">1,234</h3>
+                        <p class="text-muted small mb-0">优质提示词</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body py-4">
+                        <i class="bi bi-diagram-3 fs-1 text-success"></i>
+                        <h3 class="mt-2 mb-0">567</h3>
+                        <p class="text-muted small mb-0">高效工作流</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body py-4">
+                        <i class="bi bi-people fs-1 text-warning"></i>
+                        <h3 class="mt-2 mb-0">8,900+</h3>
+                        <p class="text-muted small mb-0">活跃用户</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body py-4">
+                        <i class="bi bi-star fs-1 text-danger"></i>
+                        <h3 class="mt-2 mb-0">98%</h3>
+                        <p class="text-muted small mb-0">好评率</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 推荐提示词 -->
+    {if !empty($recommendPrompts)}
+    <section class="py-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">
+                <i class="bi bi-star-fill text-warning"></i> 推荐提示词
+            </h3>
+            <a href="/prompt" class="text-decoration-none">更多 <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="row g-4">
+            {foreach $recommendPrompts as $item}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                {$item.category.name|default='未分类'}
+                            </span>
+                            <small class="text-muted"><i class="bi bi-eye"></i> {$item.view_count}</small>
+                        </div>
+                        <h5 class="card-title">{$item.title}</h5>
+                        <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
+                        {if $item.tags}
+                        <div class="mb-2">
+                            {foreach explode(',', $item.tags) as $tag}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
+                            {/foreach}
+                        </div>
+                        {/if}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="d-flex align-items-center">
+                                <img src="{$item.user.avatar}" class="rounded-circle" width="24" height="24">
+                                <span class="ms-2 text-muted small">{$item.user.nickname}</span>
+                            </div>
+                            <a href="/prompt/detail?id={$item.id}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                查看
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        </div>
+    </section>
+    {/if}
+
+    <!-- 推荐工作流 -->
+    {if !empty($recommendWorkflows)}
+    <section class="py-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">
+                <i class="bi bi-diagram-3-fill text-success"></i> 推荐工作流
+            </h3>
+            <a href="/workflow" class="text-decoration-none">更多 <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="row g-4">
+            {foreach $recommendWorkflows as $item}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                {$item.category.name|default='未分类'}
+                            </span>
+                            <small class="text-muted"><i class="bi bi-eye"></i> {$item.view_count}</small>
+                        </div>
+                        <h5 class="card-title">{$item.title}</h5>
+                        <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
+                        {if $item.tags}
+                        <div class="mb-2">
+                            {foreach explode(',', $item.tags) as $tag}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
+                            {/foreach}
+                        </div>
+                        {/if}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="d-flex align-items-center">
+                                <img src="{$item.user.avatar}" class="rounded-circle" width="24" height="24">
+                                <span class="ms-2 text-muted small">{$item.user.nickname}</span>
+                            </div>
+                            <a href="/workflow/detail?id={$item.id}" class="btn btn-sm btn-outline-success rounded-pill">
+                                查看
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        </div>
+    </section>
+    {/if}
+
+    <!-- 最新提示词 -->
+    {if !empty($latestPrompts)}
+    <section class="py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">
+                <i class="bi bi-clock-history text-info"></i> 最新发布
+            </h3>
+        </div>
+        <div class="row g-4">
+            {foreach $latestPrompts as $item}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-info bg-opacity-10 text-info">
+                                {$item.category.name|default='未分类'}
+                            </span>
+                            <small class="text-muted">{$item.create_time|format_time}</small>
+                        </div>
+                        <h5 class="card-title">{$item.title}</h5>
+                        <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="d-flex gap-2">
+                                <span class="text-muted small"><i class="bi bi-heart"></i> {$item.like_count}</span>
+                                <span class="text-muted small"><i class="bi bi-chat"></i> {$item.comment_count}</span>
+                            </div>
+                            <a href="/prompt/detail?id={$item.id}" class="text-decoration-none">
+                                查看 <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        </div>
+    </section>
+    {/if}
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 卡片悬停效果
+    $('.hover-card').hover(
+        function() { $(this).addClass('shadow'); },
+        function() { $(this).removeClass('shadow'); }
+    );
+});
+</script>
+{/block}

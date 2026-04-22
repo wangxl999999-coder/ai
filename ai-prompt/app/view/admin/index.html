@@ -1,0 +1,181 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<!-- 数据统计 -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">用户总数</p>
+                        <h3 class="mb-0">{$userCount}</h3>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                        <i class="bi bi-people text-primary fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">提示词总数</p>
+                        <h3 class="mb-0">{$promptCount}</h3>
+                    </div>
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                        <i class="bi bi-file-text text-success fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">工作流总数</p>
+                        <h3 class="mb-0">{$workflowCount}</h3>
+                    </div>
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                        <i class="bi bi-diagram-3 text-warning fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">评论总数</p>
+                        <h3 class="mb-0">{$commentCount}</h3>
+                    </div>
+                    <div class="bg-danger bg-opacity-10 rounded-circle p-3">
+                        <i class="bi bi-chat-dots text-danger fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 待审核提醒 -->
+{if $pendingPromptCount > 0 || $pendingWorkflowCount > 0}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle"></i>
+    <strong>待审核提醒：</strong>
+    {if $pendingPromptCount > 0}
+    有 <a href="/admin/prompt?status=1" class="alert-link">{$pendingPromptCount} 个提示词</a>
+    {/if}
+    {if $pendingPromptCount > 0 && $pendingWorkflowCount > 0}和{/if}
+    {if $pendingWorkflowCount > 0}
+    有 <a href="/admin/workflow?status=1" class="alert-link">{$pendingWorkflowCount} 个工作流</a>
+    {/if}
+    等待审核
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{/if}
+
+<div class="row g-4">
+    <!-- 最近注册用户 -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="bi bi-people me-2"></i>最近注册用户</h6>
+                <a href="/admin/user" class="text-decoration-none small">查看全部</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>用户</th>
+                                <th>手机号</th>
+                                <th>积分</th>
+                                <th>注册时间</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $latestUsers as $user}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{$user.avatar}" class="rounded-circle" width="32" height="32">
+                                        <span class="ms-2">{$user.nickname}</span>
+                                    </div>
+                                </td>
+                                <td>{$user.phone|substr_replace='****',3,4}</td>
+                                <td><span class="badge bg-primary">{$user.points}</span></td>
+                                <td>{$user.create_time|date='Y-m-d H:i'}</td>
+                                <td>
+                                    {if $user.status == 1}
+                                    <span class="badge bg-success">正常</span>
+                                    {else}
+                                    <span class="badge bg-danger">禁用</span>
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 最近评论 -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="bi bi-chat-dots me-2"></i>最近评论</h6>
+                <a href="/admin/comment" class="text-decoration-none small">查看全部</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>用户</th>
+                                <th>评论内容</th>
+                                <th>目标类型</th>
+                                <th>时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $latestComments as $comment}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{$comment.user.avatar}" class="rounded-circle" width="28" height="28">
+                                        <span class="ms-2 small">{$comment.user.nickname}</span>
+                                    </div>
+                                </td>
+                                <td class="small">{$comment.content|truncate_text=30}</td>
+                                <td>
+                                    {if $comment.target_type == 'prompt'}
+                                    <span class="badge bg-primary bg-opacity-10 text-primary">提示词</span>
+                                    {else}
+                                    <span class="badge bg-success bg-opacity-10 text-success">工作流</span>
+                                    {/if}
+                                </td>
+                                <td class="small text-muted">{$comment.create_time|format_time}</td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

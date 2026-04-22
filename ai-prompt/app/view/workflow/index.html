@@ -1,0 +1,174 @@
+{extend name="layout/base" /}
+
+{block name="content"}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">首页</a></li>
+            <li class="breadcrumb-item active">工作流库</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <!-- 左侧分类 -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>工作流分类
+                </div>
+                <div class="card-body p-2">
+                    <div class="list-group list-group-flush">
+                        <a href="/workflow" class="list-group-item list-group-item-action {if !$categoryId}active{/if} border-0">
+                            <i class="bi bi-grid me-2"></i>全部工作流
+                        </a>
+                        {foreach $categories as $category}
+                        <a href="/workflow?category_id={$category.id}" class="list-group-item list-group-item-action {if $categoryId == $category.id}active{/if} border-0">
+                            <i class="bi bi-tag me-2"></i>{$category.name}
+                        </a>
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 筛选 -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-funnel me-2"></i>排序方式
+                </div>
+                <div class="card-body p-2">
+                    <div class="list-group list-group-flush">
+                        <a href="/workflow?category_id={$categoryId}&sort=new" class="list-group-item list-group-item-action {if $sort == 'new'}active{/if} border-0">
+                            <i class="bi bi-clock me-2"></i>最新发布
+                        </a>
+                        <a href="/workflow?category_id={$categoryId}&sort=hot" class="list-group-item list-group-item-action {if $sort == 'hot'}active{/if} border-0">
+                            <i class="bi bi-fire me-2"></i>最多浏览
+                        </a>
+                        <a href="/workflow?category_id={$categoryId}&sort=like" class="list-group-item list-group-item-action {if $sort == 'like'}active{/if} border-0">
+                            <i class="bi bi-heart me-2"></i>最多点赞
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧内容 -->
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">
+                    {if $categoryId}
+                        {foreach $categories as $category}
+                            {if $category.id == $categoryId}{$category.name}{/if}
+                        {/foreach}
+                    {else}
+                        全部工作流
+                    {/if}
+                    <small class="text-muted fw-normal">({$total}个结果)</small>
+                </h4>
+                <a href="/workflow/create" class="btn btn-success btn-sm">
+                    <i class="bi bi-plus-circle"></i> 发布工作流
+                </a>
+            </div>
+            
+            {if !empty($list)}
+            <div class="row g-4">
+                {foreach $list as $item}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-success bg-opacity-10 text-success">
+                                    {$item.category.name|default='未分类'}
+                                </span>
+                                <small class="text-muted">{$item.create_time|format_time}</small>
+                            </div>
+                            <h5 class="card-title">
+                                <a href="/workflow/detail?id={$item.id}" class="text-decoration-none text-dark">
+                                    {$item.title}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
+                            
+                            {if $item.tags}
+                            <div class="mb-3">
+                                {foreach explode(',', $item.tags) as $tag}
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary me-1 mb-1">{$tag}</span>
+                                {/foreach}
+                            </div>
+                            {/if}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="{$item.user.avatar}" class="rounded-circle" width="28" height="28">
+                                    <span class="ms-2 text-muted small">{$item.user.nickname}</span>
+                                </div>
+                                <div class="d-flex gap-3 text-muted small">
+                                    <span><i class="bi bi-eye"></i> {$item.view_count}</span>
+                                    <span><i class="bi bi-heart"></i> {$item.like_count}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <div class="d-flex gap-2">
+                                <a href="/workflow/detail?id={$item.id}" class="btn btn-sm btn-outline-success w-100">
+                                    查看详情
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+            
+            <!-- 分页 -->
+            {if $totalPage > 1}
+            <nav class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {if $page > 1}
+                    <li class="page-item">
+                        <a class="page-link" href="/workflow?category_id={$categoryId}&sort={$sort}&page={$page-1}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    {/if}
+                    
+                    {for start=1 to=$totalPage}
+                    <li class="page-item {if $page == $i}active{/if}">
+                        <a class="page-link" href="/workflow?category_id={$categoryId}&sort={$sort}&page={$i}">{$i}</a>
+                    </li>
+                    {/for}
+                    
+                    {if $page < $totalPage}
+                    <li class="page-item">
+                        <a class="page-link" href="/workflow?category_id={$categoryId}&sort={$sort}&page={$page+1}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    {/if}
+                </ul>
+            </nav>
+            {/if}
+            {else}
+            <div class="text-center py-5">
+                <i class="bi bi-diagram-3 text-muted fs-1"></i>
+                <p class="text-muted mt-3">暂无工作流，快来发布第一个吧！</p>
+                <a href="/workflow/create" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> 发布工作流
+                </a>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 卡片悬停效果
+    $('.hover-card').hover(
+        function() { $(this).addClass('shadow'); },
+        function() { $(this).removeClass('shadow'); }
+    );
+});
+</script>
+{/block}
