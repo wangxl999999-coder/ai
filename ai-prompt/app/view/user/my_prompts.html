@@ -33,7 +33,7 @@
                             </div>
                             {if $item.tags}
                             <div class="mt-1">
-                                {foreach explode(',', $item.tags) as $tag}
+                                {foreach $item.tags|explode=',',### as $tag}
                                 <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
                                 {/foreach}
                             </div>

@@ -90,7 +90,7 @@
                         <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
                         {if $item.tags}
                         <div class="mb-2">
-                            {foreach explode(',', $item.tags) as $tag}
+                            {foreach $item.tags|explode=',',### as $tag}
                             <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
                             {/foreach}
                         </div>
@@ -136,7 +136,7 @@
                         <p class="card-text text-muted small">{$item.description|truncate_text=80}</p>
                         {if $item.tags}
                         <div class="mb-2">
-                            {foreach explode(',', $item.tags) as $tag}
+                            {foreach $item.tags|explode=',',### as $tag}
                             <span class="badge bg-secondary bg-opacity-10 text-secondary me-1">{$tag}</span>
                             {/foreach}
                         </div>

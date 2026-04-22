@@ -22,13 +22,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {if $Request.controller() == 'Index'}active{/if}" href="/">首页</a>
+                        <a class="nav-link {if $Request.controller == 'Index'}active{/if}" href="/">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {if $Request.controller() == 'Prompt'}active{/if}" href="/prompt">提示词</a>
+                        <a class="nav-link {if $Request.controller == 'Prompt'}active{/if}" href="/prompt">提示词</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {if $Request.controller() == 'Workflow'}active{/if}" href="/workflow">工作流</a>
+                        <a class="nav-link {if $Request.controller == 'Workflow'}active{/if}" href="/workflow">工作流</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="tipsDropdown" role="button" data-bs-toggle="dropdown">

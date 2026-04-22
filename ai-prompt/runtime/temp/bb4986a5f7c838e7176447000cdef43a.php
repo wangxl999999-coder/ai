@@ -1,4 +1,4 @@
-<?php /*a:2:{s:53:"D:\my\tare-git\ai\ai-prompt\app\view\index\index.html";i:1776826705;s:53:"D:\my\tare-git\ai\ai-prompt\app\view\layout\base.html";i:1776826641;}*/ ?>
+<?php /*a:2:{s:53:"D:\my\tare-git\ai\ai-prompt\app\view\index\index.html";i:1776845079;s:53:"D:\my\tare-git\ai\ai-prompt\app\view\layout\base.html";i:1776845020;}*/ ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -23,13 +23,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link <?php if(app('request')->controller()() == 'Index'): ?>active<?php endif; ?>" href="/">首页</a>
+                        <a class="nav-link <?php if(app('request')->controller() == 'Index'): ?>active<?php endif; ?>" href="/">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if(app('request')->controller()() == 'Prompt'): ?>active<?php endif; ?>" href="/prompt">提示词</a>
+                        <a class="nav-link <?php if(app('request')->controller() == 'Prompt'): ?>active<?php endif; ?>" href="/prompt">提示词</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php if(app('request')->controller()() == 'Workflow'): ?>active<?php endif; ?>" href="/workflow">工作流</a>
+                        <a class="nav-link <?php if(app('request')->controller() == 'Workflow'): ?>active<?php endif; ?>" href="/workflow">工作流</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="tipsDropdown" role="button" data-bs-toggle="dropdown">
@@ -184,7 +184,7 @@
                         <p class="card-text text-muted small"><?php echo htmlentities((string) truncate_text($item['description'],80)); ?></p>
                         <?php if($item['tags']): ?>
                         <div class="mb-2">
-                            <?php foreach($explode(',', $item['tags']) as $tag): ?>
+                            <?php foreach(explode(',',$item['tags'] as $tag)): ?>
                             <span class="badge bg-secondary bg-opacity-10 text-secondary me-1"><?php echo htmlentities((string) $tag); ?></span>
                             <?php endforeach; ?>
                         </div>
@@ -230,7 +230,7 @@
                         <p class="card-text text-muted small"><?php echo htmlentities((string) truncate_text($item['description'],80)); ?></p>
                         <?php if($item['tags']): ?>
                         <div class="mb-2">
-                            <?php foreach($explode(',', $item['tags']) as $tag): ?>
+                            <?php foreach(explode(',',$item['tags'] as $tag)): ?>
                             <span class="badge bg-secondary bg-opacity-10 text-secondary me-1"><?php echo htmlentities((string) $tag); ?></span>
                             <?php endforeach; ?>
                         </div>
