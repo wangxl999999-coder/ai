@@ -1,0 +1,85 @@
+{extend name="layout/user_base" /}
+
+{block name="user_content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-chat-dots me-2"></i>我的评论</h5>
+    </div>
+    <div class="card-body">
+        {if !empty($list)}
+        <div class="comments-list">
+            {foreach $list as $item}
+            <div class="border-bottom py-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex align-items-center">
+                        <img src="{$item.target_user.avatar|default='/static/images/default_avatar.png'}" class="rounded-circle" width="24" height="24">
+                        <span class="ms-2 fw-bold">{$item.target_user.nickname|default='作者'}</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge {if $item.target_type == 'prompt'}bg-primary bg-opacity-10 text-primary{else}bg-success bg-opacity-10 text-success{/if}">
+                            {if $item.target_type == 'prompt'}提示词{else}工作流{/if}
+                        </span>
+                        <small class="text-muted">{$item.create_time|format_time}</small>
+                    </div>
+                </div>
+                
+                <div class="mb-2">
+                    <a href="/{if $item.target_type == 'prompt'}prompt{else}workflow{/if}/detail?id={$item.target_id}" class="text-decoration-none fw-bold text-dark">
+                        {$item.target_title|default='[内容已删除]'}
+                    </a>
+                </div>
+                
+                <div class="p-3 bg-light rounded mb-2">
+                    <p class="mb-0">{$item.content}</p>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        <span><i class="bi bi-heart me-1"></i>{$item.like_count}</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="/{if $item.target_type == 'prompt'}prompt{else}workflow{/if}/detail?id={$item.target_id}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-eye"></i> 查看原文
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        </div>
+        
+        {if $totalPage > 1}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {if $page > 1}
+                <li class="page-item">
+                    <a class="page-link" href="/user/my-comments?page={$page-1}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {/if}
+                
+                {for start=1 to=$totalPage}
+                <li class="page-item {if $page == $i}active{/if}">
+                    <a class="page-link" href="/user/my-comments?page={$i}">{$i}</a>
+                </li>
+                {/for}
+                
+                {if $page < $totalPage}
+                <li class="page-item">
+                    <a class="page-link" href="/user/my-comments?page={$page+1}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                {/if}
+            </ul>
+        </nav>
+        {/if}
+        {else}
+        <div class="text-center py-5">
+            <i class="bi bi-chat-dots text-muted fs-1"></i>
+            <p class="text-muted mt-3">暂无发表的评论</p>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}

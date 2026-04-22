@@ -1,0 +1,187 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-chat-dots me-2"></i>评论管理</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="keyword" value="{$keyword|default=''}" placeholder="搜索评论内容">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="type">
+                    <option value="">全部类型</option>
+                    <option value="prompt" {if isset($type) && $type == 'prompt'}selected{/if}>提示词评论</option>
+                    <option value="workflow" {if isset($type) && $type == 'workflow'}selected{/if}>工作流评论</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="status">
+                    <option value="">全部状态</option>
+                    <option value="1" {if isset($status) && $status == 1}selected{/if}>待审核</option>
+                    <option value="2" {if isset($status) && $status == 2}selected{/if}>已通过</option>
+                    <option value="3" {if isset($status) && $status == 3}selected{/if}>已拒绝</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> 搜索
+                </button>
+                <a href="/admin/comment" class="btn btn-outline-secondary">
+                    重置
+                </a>
+            </div>
+        </form>
+        
+        {if !empty($list)}
+        <div class="comments-list">
+            {foreach $list as $item}
+            <div class="border p-4 mb-3 rounded">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex align-items-center">
+                        <img src="{$item.user.avatar}" class="rounded-circle" width="32" height="32">
+                        <div class="ms-2">
+                            <div class="fw-bold">{$item.user.nickname}</div>
+                            <div class="text-muted small">{$item.user.phone|substr_replace='****',3,4}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge {if $item.target_type == 'prompt'}bg-primary bg-opacity-10 text-primary{else}bg-success bg-opacity-10 text-success{/if}">
+                            {if $item.target_type == 'prompt'}提示词{else}工作流{/if}
+                        </span>
+                        <span>
+                            {if $item.status == 1}
+                            <span class="badge bg-warning">待审核</span>
+                            {elseif $item.status == 2}
+                            <span class="badge bg-success">已通过</span>
+                            {elseif $item.status == 3}
+                            <span class="badge bg-danger">已拒绝</span>
+                            {/if}
+                        </span>
+                        <small class="text-muted">{$item.create_time|date='Y-m-d H:i'}</small>
+                    </div>
+                </div>
+                
+                <div class="mb-2">
+                    <span class="text-muted small">评论于：</span>
+                    <a href="/{if $item.target_type == 'prompt'}prompt{else}workflow{/if}/detail?id={$item.target_id}" class="text-decoration-none fw-bold">
+                        {$item.target_title|default='[内容已删除]'}
+                    </a>
+                </div>
+                
+                <div class="p-3 bg-light rounded mb-3">
+                    <p class="mb-0">{$item.content}</p>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        <span><i class="bi bi-heart me-1"></i>{$item.like_count}</span>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <a href="/admin/comment/detail?id={$item.id}" class="btn btn-outline-primary">
+                            <i class="bi bi-eye"></i> 详情
+                        </a>
+                        {if $item.status == 1}
+                        <button type="button" class="btn btn-outline-success btn-audit" data-id="{$item.id}" data-status="2">
+                            通过
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-audit" data-id="{$item.id}" data-status="3">
+                            拒绝
+                        </button>
+                        {/if}
+                        <button type="button" class="btn btn-outline-danger btn-delete" data-id="{$item.id}">
+                            <i class="bi bi-trash"></i> 删除
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        </div>
+        
+        {if $totalPage > 1}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {if $page > 1}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/comment?page={$page-1}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {/if}
+                
+                {for start=1 to=$totalPage}
+                <li class="page-item {if $page == $i}active{/if}">
+                    <a class="page-link" href="/admin/comment?page={$i}">{$i}</a>
+                </li>
+                {/for}
+                
+                {if $page < $totalPage}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/comment?page={$page+1}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                {/if}
+            </ul>
+        </nav>
+        {/if}
+        {else}
+        <div class="text-center py-5">
+            <i class="bi bi-chat-dots text-muted fs-1"></i>
+            <p class="text-muted mt-3">暂无评论数据</p>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 审核
+    $('.btn-audit').click(function() {
+        const id = $(this).data('id');
+        const status = $(this).data('status');
+        const action = status == 2 ? '通过' : '拒绝';
+        
+        if (!confirm('确定要' + action + '该评论吗？')) {
+            return;
+        }
+        
+        $.post('/admin/comment/audit', {
+            id: id,
+            status: status
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('审核成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+    
+    // 删除
+    $('.btn-delete').click(function() {
+        const id = $(this).data('id');
+        
+        if (!confirm('确定要删除该评论吗？')) {
+            return;
+        }
+        
+        $.post('/admin/comment/delete', {
+            id: id
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('删除成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}

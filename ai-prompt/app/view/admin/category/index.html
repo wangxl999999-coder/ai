@@ -1,0 +1,112 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-tags me-2"></i>分类管理</h5>
+        <div>
+            <a href="/admin/category/create" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle"></i> 添加分类
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {if !empty($list)}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>分类名称</th>
+                        <th>类型</th>
+                        <th>图标</th>
+                        <th>排序</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $list as $item}
+                    <tr>
+                        <td>{$item.id}</td>
+                        <td>
+                            <div class="fw-bold">{$item.name}</div>
+                            {if $item.description}
+                            <div class="text-muted small">{$item.description}</div>
+                            {/if}
+                        </td>
+                        <td>
+                            <span class="badge {if $item.type == 'prompt'}bg-primary bg-opacity-10 text-primary{else}bg-success bg-opacity-10 text-success{/if}">
+                                {if $item.type == 'prompt'}提示词{else}工作流{/if}
+                            </span>
+                        </td>
+                        <td>
+                            {if $item.icon}
+                            <i class="{$item.icon}"></i> {$item.icon}
+                            {else}
+                            <span class="text-muted">-</span>
+                            {/if}
+                        </td>
+                        <td>{$item.sort}</td>
+                        <td>
+                            {if $item.status == 1}
+                            <span class="badge bg-success">正常</span>
+                            {else}
+                            <span class="badge bg-secondary">禁用</span>
+                            {/if}
+                        </td>
+                        <td><small class="text-muted">{$item.create_time|date='Y-m-d H:i'}</small></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/category/edit?id={$item.id}" class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger btn-delete" data-id="{$item.id}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {else}
+        <div class="text-center py-5">
+            <i class="bi bi-tags text-muted fs-1"></i>
+            <p class="text-muted mt-3">暂无分类数据</p>
+            <a href="/admin/category/create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> 添加第一个分类
+            </a>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 删除
+    $('.btn-delete').click(function() {
+        const id = $(this).data('id');
+        
+        if (!confirm('确定要删除该分类吗？')) {
+            return;
+        }
+        
+        $.post('/admin/category/delete', {
+            id: id
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('删除成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}

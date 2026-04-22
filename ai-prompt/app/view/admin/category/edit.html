@@ -1,0 +1,93 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-tag me-2"></i>{if $action == 'create'}添加分类{else}编辑分类{/if}</h5>
+        <div>
+            <a href="/admin/category" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> 返回列表
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="categoryForm" class="row justify-content-center">
+            <div class="col-md-6">
+                {if $info}
+                <input type="hidden" name="id" value="{$info.id}">
+                {/if}
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">分类名称 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="name" value="{$info.name|default=''}" placeholder="请输入分类名称" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">类型 <span class="text-danger">*</span></label>
+                    <select class="form-select" name="type" required>
+                        <option value="prompt" {if isset($info.type) && $info.type == 'prompt'}selected{/if}>提示词分类</option>
+                        <option value="workflow" {if isset($info.type) && $info.type == 'workflow'}selected{/if}>工作流分类</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">图标</label>
+                    <input type="text" class="form-control" name="icon" value="{$info.icon|default=''}" placeholder="如：bi bi-person">
+                    <div class="form-text">可使用 Bootstrap Icons 图标类名</div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold">描述</label>
+                    <textarea class="form-control" name="description" rows="3" placeholder="请输入分类描述">{$info.description|default=''}</textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold">排序</label>
+                        <input type="number" class="form-control" name="sort" value="{$info.sort|default=0}" placeholder="数字越小越靠前">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold">状态</label>
+                        <select class="form-select" name="status">
+                            <option value="1" {if !isset($info.status) || $info.status == 1}selected{/if}>正常</option>
+                            <option value="0" {if isset($info.status) && $info.status == 0}selected{/if}>禁用</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> 保存
+                    </button>
+                    <a href="/admin/category" class="btn btn-outline-secondary ms-2">
+                        取消
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    $('#categoryForm').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = $(this).serialize();
+        
+        $.post('/admin/category/save', formData, function(res) {
+            if (res.code === 200) {
+                toastr.success('保存成功');
+                setTimeout(function() {
+                    location.href = '/admin/category';
+                }, 500);
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}

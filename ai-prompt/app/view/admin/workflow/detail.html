@@ -1,0 +1,108 @@
+{extend name="layout/admin_base" /}
+
+{block name="content"}
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-diagram-3 me-2"></i>工作流详情</h5>
+        <div>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> 返回
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {if $info}
+        <div class="mb-4">
+            <h3>{$info.title}</h3>
+            <div class="d-flex gap-3 text-muted small mt-2">
+                <span><i class="bi bi-person"></i> {$info.user.nickname}</span>
+                <span><i class="bi bi-tag"></i> {$info.category.name|default='未分类'}</span>
+                <span><i class="bi bi-eye"></i> {$info.view_count} 浏览</span>
+                <span><i class="bi bi-heart"></i> {$info.like_count} 点赞</span>
+                <span>
+                    {if $info.status == 1}
+                    <span class="badge bg-warning">待审核</span>
+                    {elseif $info.status == 2}
+                    <span class="badge bg-success">已通过</span>
+                    {elseif $info.status == 3}
+                    <span class="badge bg-danger">已拒绝</span>
+                    {else}
+                    <span class="badge bg-secondary">已禁用</span>
+                    {/if}
+                </span>
+            </div>
+        </div>
+        
+        {if $info.tags}
+        <div class="mb-4">
+            {foreach explode(',', $info.tags) as $tag}
+            <span class="badge bg-secondary bg-opacity-10 text-secondary me-2">{$tag}</span>
+            {/foreach}
+        </div>
+        {/if}
+        
+        {if $info.description}
+        <div class="alert alert-info mb-4">
+            <h6 class="fw-bold"><i class="bi bi-info-circle"></i> 简介</h6>
+            <p class="mb-0">{$info.description}</p>
+        </div>
+        {/if}
+        
+        <div class="mb-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-file-earmark-text"></i> 内容</h6>
+            <div class="bg-light p-4 rounded">
+                <pre class="mb-0 white-space-pre-wrap">{$info.content}</pre>
+            </div>
+        </div>
+        
+        {if $info.status == 1}
+        <div class="border-top pt-4">
+            <h6 class="fw-bold mb-3">审核操作</h6>
+            <div class="d-flex gap-3">
+                <button type="button" class="btn btn-success btn-audit" data-id="{$info.id}" data-status="2">
+                    <i class="bi bi-check-circle"></i> 审核通过
+                </button>
+                <button type="button" class="btn btn-danger btn-audit" data-id="{$info.id}" data-status="3">
+                    <i class="bi bi-x-circle"></i> 审核拒绝
+                </button>
+            </div>
+        </div>
+        {/if}
+        {else}
+        <div class="text-center py-5">
+            <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
+            <p class="text-muted mt-3">工作流不存在或已被删除</p>
+        </div>
+        {/if}
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script>
+$(function() {
+    // 审核
+    $('.btn-audit').click(function() {
+        const id = $(this).data('id');
+        const status = $(this).data('status');
+        const action = status == 2 ? '通过' : '拒绝';
+        
+        if (!confirm('确定要' + action + '该工作流吗？')) {
+            return;
+        }
+        
+        $.post('/admin/workflow/audit', {
+            id: id,
+            status: status
+        }, function(res) {
+            if (res.code === 200) {
+                toastr.success('审核成功');
+                location.reload();
+            } else {
+                toastr.error(res.msg);
+            }
+        }, 'json');
+    });
+});
+</script>
+{/block}
